@@ -2,6 +2,7 @@
 
 [![Node.js CI](https://github.com/rpitv/pi-led-control/actions/workflows/node.js.yml/badge.svg)](https://github.com/rpitv/pi-led-control/actions/workflows/node.js.yml)
 [![codecov](https://codecov.io/gh/rpitv/pi-led-control/branch/master/graph/badge.svg?token=doiWhO8Q1K)](https://codecov.io/gh/rpitv/pi-led-control)
+[![CodeQL](https://github.com/rpitv/pi-led-control/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/rpitv/pi-led-control/actions/workflows/codeql-analysis.yml)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 > Control different types of LEDs from your Raspberry Pi.
