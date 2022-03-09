@@ -1,42 +1,38 @@
-# Atem Tally for Raspberry Pi &middot;
+# Raspberry Pi LED Control &middot;
 
-[![Node.js CI](https://github.com/rpitv/atem-tally/actions/workflows/node.js.yml/badge.svg)](https://github.com/rpitv/atem-tally/actions/workflows/node.js.yml)
-[![codecov](https://codecov.io/gh/rpitv/atem-tally/branch/master/graph/badge.svg?token=doiWhO8Q1K)](https://codecov.io/gh/rpitv/atem-tally)
+[![Node.js CI](https://github.com/rpitv/pi-led-control/actions/workflows/node.js.yml/badge.svg)](https://github.com/rpitv/pi-led-control/actions/workflows/node.js.yml)
+[![codecov](https://codecov.io/gh/rpitv/pi-led-control/branch/master/graph/badge.svg?token=doiWhO8Q1K)](https://codecov.io/gh/rpitv/pi-led-control)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
-This is a simple camera tally system built to work with Blackmagic Design ATEM 2 switchers on a Raspberry Pi over 3 pins. This allows for easy wired connection over an XLR cable.
+> Control different types of LEDs from your Raspberry Pi.
+
+## Features
+
+- Control different types of LEDs from your application.
+  - Single channel
+  - RGB/tri-channel
+  - Arbitrary channel count
+- Diode mode, allowing you to remove a dedicated ground.
+- Flash LEDs at any frequency.
+- Animate your LEDs using your own custom functions.
 
 ## Necessary supplies
 
-- Raspberry Pi (any should do, as long as it has GPIO and network connectivity).
-- R/G/B LEDs or at least one RGB LED w/ necessary resistors.
-- Ethernet connection to your switcher.
-- Diodes for the ground connection.
+- Raspberry Pi (any should do, as long as it has GPIO).
+- LED(s) w/ necessary resistors.
+- Diodes for the ground connection, if using diode mode.
 
 Hardware instructions coming sometime in the future.
 
 ## Usage
 
-To install the software:
-
-1. Connect your LED(s) to the appropriate GPIO pins and edit the config file to contain the right pin numbers.
-2. Configure your Raspberry Pi to be on the same network as your ATEM switcher, making sure the Raspberry Pi
-   is able to ping and connect to the switcher.
-3. Edit the config file to contain the right IP of your switcher and the right input ID to listen to (more info for this step in the future).
-4. Install the dependencies with `npm install`.
-5. Start the program with `npm start` or your favorite process manager.
-
-This will start the program, running `src/index.ts` and updating the tally lights until execution is stopped. The state of LEDs will be preserved when the process ends until it is overwritten.
-
-## Configuration
-
-Here you should write what are all of the configurations a user can enter when using the project.
+TODO Coming soon
 
 ## Development
 
 ### Prerequisites
 
-You must install Node.js and NPM before beginning to develop or use this application. Currently, only Node LTS v12, v14, and v16 are tested. Any other version is not guaranteed to work.
+You must install Node.js and NPM before beginning to develop or use this library. Currently, only Node LTS v12, v14, and v16 are tested. Any other version is not guaranteed to work.
 
 It's recommended you install Node.js and NPM using [nvm](https://github.com/nvm-sh/nvm).
 
@@ -45,8 +41,8 @@ It's recommended you install Node.js and NPM using [nvm](https://github.com/nvm-
 Run the following script in order to begin development:
 
 ```shell
-git clone https://github.com/rpitv/atem-tally.git
-cd atem-tally/
+git clone https://github.com/rpitv/pi-led-control.git
+cd pi-led-control/
 npm install
 npm run prepare
 ```
@@ -55,7 +51,7 @@ You are now ready to write code. All application code is located within [/src](.
 
 ### Testing
 
-A unit test suite is available for the internal API. Current plans are to eventually add an external API, allowing for arbitrary usage. You may run the test suite by executing:
+A unit test suite is available for the full API. You may run the test suite by executing:
 
 ```shell
 npm test
