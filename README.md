@@ -63,7 +63,7 @@ Since you presumably will not be developing on a Raspberry Pi, it's important to
 
 This project follows the guidelines found here: https://github.com/elsewhencode/project-guidelines
 
-The main rule from these guidelines that we do not follow is commits do not necessarily have to go into a dev branch before master. It is up to your distrection to determine whether it would be appropriate to do so.
+The main branch is the development branch. When it's time for a release, `dev` is merged into `release`.
 
 Code style is enforced using ESLint. Continuous Integration runs the linter before unit tests, however you may also run the linter yourself using:
 
