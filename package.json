@@ -1,6 +1,6 @@
 {
   "name": "pi-led-control",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Control different types of LEDs from your Raspberry Pi.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
