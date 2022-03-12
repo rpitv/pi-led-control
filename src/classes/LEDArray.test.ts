@@ -628,20 +628,13 @@ it("Allows null in place of an Animation for LEDs which you don't want animated"
     ]);
     setTimeout(() => {
         expect(pwmSpy).toHaveBeenCalledTimes(2);
-        leds.animate([
-            null,
-            new Animation((t) => t / 500, 100),
-            new Animation((t) => t / 400, 100),
-        ]);
-    }, 100);
-    setTimeout(() => {
-        expect(pwmSpy).toHaveBeenCalledTimes(2);
         leds.animate([new Animation((t) => t / 500, 100), null, null]);
         setTimeout(() => {
             expect(pwmSpy).toHaveBeenCalledTimes(3);
             leds.stopAnimation();
-        });
+        }, 100);
     }, 100);
+    jest.runAllTimers();
 });
 
 it("Stops animation when stopAnimation() is called", () => {
