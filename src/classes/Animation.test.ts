@@ -323,11 +323,11 @@ it("Defaults to refresh rate of 60fps when one isn't explicitly set", () => {
         .start();
     expect(mock).toHaveBeenCalledTimes(0);
     setTimeout(() => {
-        expect(mock).toHaveBeenCalledTimes(3);
+        expect(mock).toHaveBeenCalledTimes(1);
         setTimeout(() => {
-            expect(mock).toHaveBeenCalledTimes(6);
+            expect(mock).toHaveBeenCalledTimes(2);
             anim.stop();
-        }, Math.floor(1 / 60) * 1000);
-    }, Math.floor(1 / 60) * 1000);
+        }, Math.floor((1 / 60) * 1000));
+    }, Math.floor((1 / 60) * 1000));
     jest.runAllTimers();
 });
