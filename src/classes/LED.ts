@@ -59,7 +59,7 @@ class LED {
     public animate(animation: Animation, autoStart: boolean): void;
     public animate(animation: Animation, autoStart?: boolean): void {
         this.stopAnimation();
-        this.animation = animation;
+        this.animation = animation.copy();
         this.animation.subscribe((val) => {
             this.pin.pwmWrite(Math.round(val * 255));
         });
@@ -82,7 +82,7 @@ class LED {
     }
 
     /**
-     * Stop any Animation which is currently happening. If the Light is not
+     * Stop any Animation which is currently happening. If the LED is not
      *  currently animating, nothing happens. Animation is still stored, and
      *  can be resumed by calling {@link #startAnimation()}. The Animation
      *  will resume from the same location at which it stopped. This method does

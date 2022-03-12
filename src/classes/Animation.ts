@@ -23,7 +23,7 @@ class Animation {
      *  which will be passed to your curve function instead of the calculated
      *  time.
      */
-    constructor(refreshRate: number, curve: (time: number) => number) {
+    public constructor(refreshRate: number, curve: (time: number) => number) {
         if (refreshRate < 1) {
             throw new Error(
                 "Cannot create an animation with a refresh rate less than 1!"
@@ -41,7 +41,7 @@ class Animation {
      *  running and then stopped, it will resume progress from where it stopped.
      * @returns this
      */
-    start(): Animation {
+    public start(): Animation {
         if (!this.isRunning()) {
             if (this.startTime === null) {
                 this.startTime = Date.now();
@@ -66,7 +66,7 @@ class Animation {
      *  where it stopped.
      * @returns this
      */
-    stop(): Animation {
+    public stop(): Animation {
         if (this.isRunning()) {
             this.stopTime = Date.now();
             clearInterval(this.timer as NodeJS.Timer);
@@ -83,7 +83,7 @@ class Animation {
      *  from the beginning.
      *  @returns this
      */
-    reset(): Animation {
+    public reset(): Animation {
         if (this.isRunning()) {
             this.startTime = Date.now();
         } else {
@@ -100,7 +100,7 @@ class Animation {
      *  and its result will be returned. If the animation has not yet started,
      *  it will pass 0 to the curve function.
      */
-    calculate(): number;
+    public calculate(): number;
     /**
      * Calculate the animation's value at a custom time. Time is measured in
      *  milliseconds. So, if you want to retrieve what the animation will be
@@ -109,8 +109,8 @@ class Animation {
      *  be negative, as long as that does not break the curve function passed
      *  to the constructor.
      */
-    calculate(time: number): number;
-    calculate(time?: number): number {
+    public calculate(time: number): number;
+    public calculate(time?: number): number {
         if (time === undefined) {
             if (this.startTime === null) {
                 time = 0;
@@ -121,23 +121,27 @@ class Animation {
         return Math.max(0, Math.min(1, this.curve(time)));
     }
 
-    isRunning(): boolean {
+    public isRunning(): boolean {
         return this.timer !== null;
     }
 
-    subscribe(listener: (newValue: number) => void): Animation {
+    public subscribe(listener: (newValue: number) => void): Animation {
         if (!this.subscribers.includes(listener)) {
             this.subscribers.push(listener);
         }
         return this;
     }
 
-    unsubscribe(listener: (newValue: number) => void): Animation {
+    public unsubscribe(listener: (newValue: number) => void): Animation {
         const index = this.subscribers.indexOf(listener);
         if (index >= 0) {
             this.subscribers.splice(index, 1);
         }
         return this;
+    }
+
+    public copy(): Animation {
+        return new Animation(this.frequency, this.curve);
     }
 
     private callSubscribers(): void {
