@@ -9,118 +9,81 @@ const offset = 0.001;
  *   Square   *
  **************/
 
-it("Correctly handles square function at frequency == 1", () => {
-    const square = Curves.Square(1);
-    expect(square(0)).toBeCloseTo(0, sigFig);
+// 15ms period is considered the minimum, as anything lower isn't necessarily
+//  reliable due to how the event loop operates.
+const period = 15;
+it("Correctly handles square function at period " + period + "ms", () => {
+    const square = Curves.Square(period);
+    expect(square(0 - offset)).toBeCloseTo(0, sigFig);
     expect(square(offset)).toBeCloseTo(1, sigFig);
-    expect(square(Math.PI - offset)).toBeCloseTo(1, sigFig);
-    expect(square(Math.PI + offset)).toBeCloseTo(0, sigFig);
-    expect(square(Math.PI + offset)).toBeCloseTo(0, sigFig);
+    expect(square(period - offset)).toBeCloseTo(1, sigFig);
+    expect(square(3 * period + offset)).toBeCloseTo(0, sigFig);
+    expect(square(3 * period + offset)).toBeCloseTo(0, sigFig);
 });
 
-it("Correctly handles square function at frequency > 1", () => {
-    const square = Curves.Square(3);
-    expect(square(0)).toBeCloseTo(0, sigFig);
-    expect(square(offset)).toBeCloseTo(1, sigFig);
-    expect(square(Math.PI / 3 - offset)).toBeCloseTo(1, sigFig);
-    expect(square(Math.PI / 3 + offset)).toBeCloseTo(0, sigFig);
-    expect(square(Math.PI / 3 + offset)).toBeCloseTo(0, sigFig);
+it("Correctly handles square function at period -" + period + "ms", () => {
+    const square = Curves.Square(-period);
+    expect(square(period - offset)).toBeCloseTo(0, sigFig);
+    expect(square(3 * period + offset)).toBeCloseTo(1, sigFig);
+    expect(square(3 * period + offset)).toBeCloseTo(1, sigFig);
 });
 
-it("Correctly handles square function at 0 < frequency < 1", () => {
-    const square = Curves.Square(1 / 60);
-    expect(square(0)).toBeCloseTo(0, sigFig);
-    expect(square(offset)).toBeCloseTo(1, sigFig);
-    expect(square(Math.PI * 60 - offset)).toBeCloseTo(1, sigFig);
-    expect(square(Math.PI * 60 + offset)).toBeCloseTo(0, sigFig);
-    expect(square(Math.PI * 60 + offset)).toBeCloseTo(0, sigFig);
-});
-
-it("Correctly handles square function at frequency == 0", () => {
-    const square = Curves.Square(0);
-    expect(square(0)).toBeCloseTo(0, sigFig);
-    expect(square(offset)).toBeCloseTo(0, sigFig);
-    expect(square(Math.PI - offset)).toBeCloseTo(0, sigFig);
-    expect(square(Math.PI + offset)).toBeCloseTo(0, sigFig);
-    expect(square(Math.PI + offset)).toBeCloseTo(0, sigFig);
+it("Correctly handles square function at period 0ms", () => {
+    expect(() => {
+        Curves.Square(0);
+    }).toThrow(Error);
 });
 
 /****************
  *   Sawtooth   *
  ****************/
 
-it("Correctly handles sawtooth function at frequency == 1", () => {
-    const sawtooth = Curves.Sawtooth(1);
+it("Correctly handles sawtooth function at period " + period + "ms", () => {
+    const sawtooth = Curves.Sawtooth(period);
     expect(sawtooth(0)).toBeCloseTo(0, sigFig);
-    expect(sawtooth(offset)).toBeCloseTo(offset, sigFig);
-    expect(sawtooth(3 - offset)).toBeCloseTo(1 - offset, sigFig);
-    expect(sawtooth(3 + offset)).toBeCloseTo(offset, sigFig);
-    expect(sawtooth(1000 + offset)).toBeCloseTo(offset, sigFig);
+    expect(sawtooth(offset * period)).toBeCloseTo(offset, sigFig);
+    expect(sawtooth((3 - offset) * period)).toBeCloseTo(1 - offset, sigFig);
+    expect(sawtooth((3 + offset) * period)).toBeCloseTo(offset, sigFig);
+    expect(sawtooth((1000 + offset) * period)).toBeCloseTo(offset, sigFig);
 });
 
-it("Correctly handles sawtooth function at frequency > 1", () => {
-    const sawtooth = Curves.Sawtooth(4);
-    expect(sawtooth(0)).toBeCloseTo(0, sigFig);
-    expect(sawtooth(offset)).toBeCloseTo(offset * 4, sigFig);
-    expect(sawtooth(3 - offset)).toBeCloseTo(1 - offset * 4, sigFig);
-    expect(sawtooth(3 + offset)).toBeCloseTo(offset * 4, sigFig);
-    expect(sawtooth(1000 + offset)).toBeCloseTo(offset * 4, sigFig);
+it("Correctly handles sawtooth function at period -" + period + "ms", () => {
+    const sawtooth = Curves.Sawtooth(-period);
+    expect(sawtooth((3 - offset) * period)).toBeCloseTo(1 - offset, sigFig);
+    expect(sawtooth((3 + offset) * period)).toBeCloseTo(offset, sigFig);
+    expect(sawtooth((1000 + offset) * period)).toBeCloseTo(offset, sigFig);
 });
 
-it("Correctly handles sawtooth function at 0 < frequency < 1", () => {
-    const sawtooth = Curves.Sawtooth(1 / 4);
-    expect(sawtooth(0)).toBeCloseTo(0, sigFig);
-    expect(sawtooth(offset)).toBeCloseTo(offset / 4, sigFig);
-    expect(sawtooth(3 - offset)).toBeCloseTo(3 / 4 - offset / 4, sigFig);
-    expect(sawtooth(3 + offset)).toBeCloseTo(3 / 4 + offset / 4, sigFig);
-    expect(sawtooth(6 + offset)).toBeCloseTo(1 / 2 + offset / 4, sigFig);
-});
-
-it("Correctly handles sawtooth function at frequency == 0", () => {
-    const sawtooth = Curves.Sawtooth(0);
-    expect(sawtooth(0)).toBeCloseTo(0, sigFig);
-    expect(sawtooth(offset)).toBeCloseTo(0, sigFig);
-    expect(sawtooth(3 - offset)).toBeCloseTo(0, sigFig);
-    expect(sawtooth(3 + offset)).toBeCloseTo(0, sigFig);
-    expect(sawtooth(1000 + offset)).toBeCloseTo(0, sigFig);
+it("Correctly handles sawtooth function at period 0ms", () => {
+    expect(() => {
+        Curves.Sawtooth(0);
+    }).toThrow(Error);
 });
 
 /************
  *   Sine   *
  ************/
 
-it("Correctly handles sine function at frequency == 1", () => {
-    const sine = Curves.Sine(1);
+it("Correctly handles sine function at period " + period + "ms", () => {
+    const sine = Curves.Sine(period);
     expect(sine(0)).toBeCloseTo(0.5, sigFig);
-    expect(sine(Math.PI / 2)).toBeCloseTo(1, sigFig);
-    expect(sine(40)).toBeCloseTo(0.872556, sigFig);
-    expect(sine((3 / 2) * Math.PI)).toBeCloseTo(0, sigFig);
-    expect(sine(Math.PI + offset)).toBeCloseTo(0.4995, sigFig);
+    expect(sine(period / 4)).toBeCloseTo(1, sigFig);
+    expect(sine(period * 24.123)).toBeCloseTo(0.849082, sigFig);
+    expect(sine(period * 1.75)).toBeCloseTo(0, sigFig);
+    expect(sine((1 + offset) * period)).toBeCloseTo(0.503141, sigFig);
 });
 
-it("Correctly handles sine function at frequency > 1", () => {
-    const sine = Curves.Sine(5);
+it("Correctly handles sine function at period -" + period + "ms", () => {
+    const sine = Curves.Sine(-period);
     expect(sine(0)).toBeCloseTo(0.5, sigFig);
-    expect(sine(Math.PI / 2)).toBeCloseTo(1, sigFig);
-    expect(sine(40)).toBeCloseTo(0.063351, sigFig);
-    expect(sine((3 / 2) * Math.PI)).toBeCloseTo(0, sigFig);
-    expect(sine(Math.PI + offset)).toBeCloseTo(0.4975, sigFig);
+    expect(sine(period / 4)).toBeCloseTo(0, sigFig);
+    expect(sine(period * 24.123)).toBeCloseTo(0.150917, sigFig);
+    expect(sine(period * 1.75)).toBeCloseTo(1, sigFig);
+    expect(sine((1 + offset) * period)).toBeCloseTo(0.496858, sigFig);
 });
 
-it("Correctly handles sine function at 0 < frequency < 1", () => {
-    const sine = Curves.Sine(1 / 11);
-    expect(sine(0)).toBeCloseTo(0.5, sigFig);
-    expect(sine(Math.PI / 2)).toBeCloseTo(0.571157, sigFig);
-    expect(sine(40)).toBeCloseTo(0.262584, sigFig);
-    expect(sine((3 / 2) * Math.PI)).toBeCloseTo(0.707707, sigFig);
-    expect(sine(Math.PI + offset)).toBeCloseTo(0.640909, sigFig);
-});
-
-it("Correctly handles sine function at frequency == 0", () => {
-    const sine = Curves.Sine(0);
-    expect(sine(0)).toBeCloseTo(0.5, sigFig);
-    expect(sine(Math.PI / 2)).toBeCloseTo(0.5, sigFig);
-    expect(sine(40)).toBeCloseTo(0.5, sigFig);
-    expect(sine((3 / 2) * Math.PI)).toBeCloseTo(0.5, sigFig);
-    expect(sine(Math.PI + offset)).toBeCloseTo(0.5, sigFig);
+it("Correctly handles sine function at period 0ms", () => {
+    expect(() => {
+        Curves.Sine(0);
+    }).toThrow(Error);
 });
