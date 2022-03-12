@@ -614,6 +614,36 @@ it("Starts animation when startAnimation() is called", () => {
     jest.runAllTimers();
 });
 
+it("Allows null in place of an Animation for LEDs which you don't want animated", () => {
+    const leds = new LEDArray([7, 10, 15]);
+    leds.animate([
+        new Animation((t) => t / 400, 100),
+        null,
+        new Animation((t) => t / 400, 100),
+    ]);
+    leds.animate([
+        null,
+        new Animation((t) => t / 500, 100),
+        new Animation((t) => t / 400, 100),
+    ]);
+    setTimeout(() => {
+        expect(pwmSpy).toHaveBeenCalledTimes(2);
+        leds.animate([
+            null,
+            new Animation((t) => t / 500, 100),
+            new Animation((t) => t / 400, 100),
+        ]);
+    }, 100);
+    setTimeout(() => {
+        expect(pwmSpy).toHaveBeenCalledTimes(2);
+        leds.animate([new Animation((t) => t / 500, 100), null, null]);
+        setTimeout(() => {
+            expect(pwmSpy).toHaveBeenCalledTimes(3);
+            leds.stopAnimation();
+        });
+    }, 100);
+});
+
 it("Stops animation when stopAnimation() is called", () => {
     const leds = new LEDArray([7, 10, 15]);
     leds.animate({
