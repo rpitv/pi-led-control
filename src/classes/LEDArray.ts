@@ -3,7 +3,7 @@ import Animation from "./Animation";
 
 type AnimationOptions = {
     animation: Animation[] | Animation;
-    values?: number[] | boolean[];
+    values?: number[];
     autoStart?: boolean;
 };
 
@@ -88,18 +88,15 @@ class LEDArray {
      *  corresponding to a LED at the same index. For example, in an LED array
      *  with 3 LEDs, passing in the array [200, 100, 50] means that when the
      *  animation reaches a point of half brightness, the three LEDs would be at
-     *  a brightness of 100, 50, and 25 respectively. It is expected that each
-     *  value in this array is of the same type, and that the array's length
-     *  is equal to the number of LEDs in this LEDArray. If you wish to have
-     *  more control over the animation by having different proportions at
-     *  different points throughout the Animation, take a look at the different
-     *  parameters to this method.
-     * @throws Error if the values of the animation array aren't all the same
-     *  type.
+     *  a brightness of 100, 50, and 25 respectively. It is expected that the
+     *  array's length is equal to the number of LEDs in this LEDArray. If you
+     *  wish to have more control over the animation by having different
+     *  proportions at different points throughout the Animation, take a look at
+     *  the different parameters to this method.
      * @throws Error if the length of the values array isn't equal to the total
      *  number of LEDs in this LEDArray.
      */
-    animate(animation: Animation, values: number[] | boolean[]): void;
+    animate(animation: Animation, values: number[]): void;
     /**
      * Start an animation across this LED array's LEDs.
      * @param options Options argument which allows more verbose control over
@@ -133,7 +130,7 @@ class LEDArray {
     animate(options: AnimationOptions): void;
     animate(
         arg1: Animation[] | AnimationOptions | Animation,
-        arg2?: number[] | boolean[]
+        arg2?: number[]
     ): void {
         this.stopAnimation();
         let options: AnimationOptions;
@@ -184,12 +181,7 @@ class LEDArray {
                 }
                 for (let i = 0; i < this.leds.length; i++) {
                     const led = this.leds[i];
-                    let ratio;
-                    if (typeof this.animation.values[i] === "boolean") {
-                        ratio = this.animation.values[i] ? 1 : 0;
-                    } else {
-                        ratio = (this.animation.values[i] as number) / 255;
-                    }
+                    const ratio = this.animation.values[i] / 255;
                     led.write(Math.round(newValue * ratio * 255));
                 }
             });

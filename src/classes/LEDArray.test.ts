@@ -427,8 +427,6 @@ it("Requires animation arrays to be of the same length as there are LEDs", () =>
 
 it("Requires animation values array to be of the same length as there are LEDs", () => {
     const leds = new LEDArray([7, 10, 15]);
-    leds.animate(new Animation(100, (t) => t / 750), [false, true, true]);
-    leds.animate(new Animation(100, (t) => t / 750), [false, true, true]);
     leds.animate(new Animation(100, (t) => t / 750), [255, 255, 255]);
     leds.animate(new Animation(100, (t) => t / 750), [255, 35, 172]);
     expect(() => {
@@ -436,17 +434,6 @@ it("Requires animation values array to be of the same length as there are LEDs",
     }).toThrow(Error);
     expect(() => {
         leds.animate(new Animation(100, (t) => t / 750), [255, 35]);
-    }).toThrow(Error);
-    expect(() => {
-        leds.animate(new Animation(100, (t) => t / 750), [
-            false,
-            true,
-            true,
-            false,
-        ]);
-    }).toThrow(Error);
-    expect(() => {
-        leds.animate(new Animation(100, (t) => t / 750), [false, true]);
     }).toThrow(Error);
     leds.stopAnimation();
 });
