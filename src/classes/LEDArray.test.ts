@@ -399,27 +399,27 @@ it("Turns off all LEDs with off()", () => {
 it("Requires animation arrays to be of the same length as there are LEDs", () => {
     const leds = new LEDArray([7, 10, 15]);
     leds.animate([
-        new Animation(100, (t) => t / 400),
-        new Animation(100, (t) => t / 400),
-        new Animation(100, (t) => t / 400),
+        new Animation((t) => t / 400, 100),
+        new Animation((t) => t / 400, 100),
+        new Animation((t) => t / 400, 100),
     ]);
     leds.animate([
-        new Animation(100, (t) => t / 400),
-        new Animation(100, (t) => t / 500),
-        new Animation(100, (t) => t / 400),
+        new Animation((t) => t / 400, 100),
+        new Animation((t) => t / 500, 100),
+        new Animation((t) => t / 400, 100),
     ]);
     expect(() => {
         leds.animate([
-            new Animation(100, (t) => t / 400),
-            new Animation(100, (t) => t / 400),
-            new Animation(100, (t) => t / 400),
-            new Animation(100, (t) => t / 400),
+            new Animation((t) => t / 400, 100),
+            new Animation((t) => t / 400, 100),
+            new Animation((t) => t / 400, 100),
+            new Animation((t) => t / 400, 100),
         ]);
     }).toThrow(Error);
     expect(() => {
         leds.animate([
-            new Animation(100, (t) => t / 400),
-            new Animation(100, (t) => t / 400),
+            new Animation((t) => t / 400, 100),
+            new Animation((t) => t / 400, 100),
         ]);
     }).toThrow(Error);
     leds.stopAnimation();
@@ -427,13 +427,13 @@ it("Requires animation arrays to be of the same length as there are LEDs", () =>
 
 it("Requires animation values array to be of the same length as there are LEDs", () => {
     const leds = new LEDArray([7, 10, 15]);
-    leds.animate(new Animation(100, (t) => t / 750), [255, 255, 255]);
-    leds.animate(new Animation(100, (t) => t / 750), [255, 35, 172]);
+    leds.animate(new Animation((t) => t / 750, 100), [255, 255, 255]);
+    leds.animate(new Animation((t) => t / 750, 100), [255, 35, 172]);
     expect(() => {
-        leds.animate(new Animation(100, (t) => t / 750), [255, 35, 172, 212]);
+        leds.animate(new Animation((t) => t / 750, 100), [255, 35, 172, 212]);
     }).toThrow(Error);
     expect(() => {
-        leds.animate(new Animation(100, (t) => t / 750), [255, 35]);
+        leds.animate(new Animation((t) => t / 750, 100), [255, 35]);
     }).toThrow(Error);
     leds.stopAnimation();
 });
@@ -442,28 +442,28 @@ it("Requires all values within the animation value array to be of the same type"
     const leds = new LEDArray([7, 10, 15]);
     expect(() => {
         leds.animate(
-            new Animation(100, (t) => t / 750),
+            new Animation((t) => t / 750, 100),
             // @ts-ignore Intentional test
             [255, false, 172]
         );
     }).toThrow(Error);
     expect(() => {
         leds.animate(
-            new Animation(100, (t) => t / 750),
+            new Animation((t) => t / 750, 100),
             // @ts-ignore Intentional test
             [true, 35, false]
         );
     }).toThrow(Error);
     expect(() => {
         leds.animate(
-            new Animation(100, (t) => t / 750),
+            new Animation((t) => t / 750, 100),
             // @ts-ignore Intentional test
             [false, true, 190]
         );
     }).toThrow(Error);
     expect(() => {
         leds.animate(
-            new Animation(100, (t) => t / 750),
+            new Animation((t) => t / 750, 100),
             // @ts-ignore Intentional test
             [83, true, false]
         );
@@ -475,11 +475,11 @@ it("Requires the values array if a single Animation is passed in the Animation o
     const leds = new LEDArray([7, 10, 15]);
     expect(() => {
         leds.animate({
-            animation: new Animation(100, (t) => t / 38),
+            animation: new Animation((t) => t / 38, 100),
         });
     }).toThrow(Error);
     leds.animate({
-        animation: new Animation(100, (t) => t / 38),
+        animation: new Animation((t) => t / 38, 100),
         values: [40, 55, 90],
     });
     leds.stopAnimation();
@@ -489,16 +489,16 @@ it("Does not require a values array if an Animation array is passed in the Anima
     const leds = new LEDArray([7, 10, 15]);
     leds.animate({
         animation: [
-            new Animation(100, (t) => t / 38),
-            new Animation(100, (t) => t / 38),
-            new Animation(100, (t) => t / 38),
+            new Animation((t) => t / 38, 100),
+            new Animation((t) => t / 38, 100),
+            new Animation((t) => t / 38, 100),
         ],
     });
     leds.animate({
         animation: [
-            new Animation(100, (t) => t / 38),
-            new Animation(100, (t) => t / 38),
-            new Animation(100, (t) => t / 38),
+            new Animation((t) => t / 38, 100),
+            new Animation((t) => t / 38, 100),
+            new Animation((t) => t / 38, 100),
         ],
         values: [40, 55, 90],
     });
@@ -509,9 +509,9 @@ it("Starts animation automatically if autoStart is not set in the animation opti
     const leds = new LEDArray([7, 10, 15]);
     leds.animate({
         animation: [
-            new Animation(100, (t) => t / 38),
-            new Animation(100, (t) => t / 38),
-            new Animation(100, (t) => t / 38),
+            new Animation((t) => t / 38, 100),
+            new Animation((t) => t / 38, 100),
+            new Animation((t) => t / 38, 100),
         ],
     });
     expect(pwmSpy).toHaveBeenCalledTimes(0);
@@ -529,9 +529,9 @@ it("Starts animation automatically if autoStart is set to true in the animation 
     const leds = new LEDArray([7, 10, 15]);
     leds.animate({
         animation: [
-            new Animation(100, (t) => t / 38),
-            new Animation(100, (t) => t / 38),
-            new Animation(100, (t) => t / 38),
+            new Animation((t) => t / 38, 100),
+            new Animation((t) => t / 38, 100),
+            new Animation((t) => t / 38, 100),
         ],
         autoStart: true,
     });
@@ -550,9 +550,9 @@ it("Does not start animation automatically if autoStart is set to false in the a
     const leds = new LEDArray([7, 10, 15]);
     leds.animate({
         animation: [
-            new Animation(100, (t) => t / 38),
-            new Animation(100, (t) => t / 38),
-            new Animation(100, (t) => t / 38),
+            new Animation((t) => t / 38, 100),
+            new Animation((t) => t / 38, 100),
+            new Animation((t) => t / 38, 100),
         ],
         autoStart: false,
     });
@@ -574,9 +574,9 @@ it("Throws an error if you attempt to start an animation before setting one", ()
     }).toThrow(Error);
     leds.animate({
         animation: [
-            new Animation(100, (t) => t / 38),
-            new Animation(100, (t) => t / 38),
-            new Animation(100, (t) => t / 38),
+            new Animation((t) => t / 38, 100),
+            new Animation((t) => t / 38, 100),
+            new Animation((t) => t / 38, 100),
         ],
         autoStart: false,
     });
@@ -595,9 +595,9 @@ it("Starts animation when startAnimation() is called", () => {
     const leds = new LEDArray([7, 10, 15]);
     leds.animate({
         animation: [
-            new Animation(100, (t) => t / 38),
-            new Animation(100, (t) => t / 38),
-            new Animation(100, (t) => t / 38),
+            new Animation((t) => t / 38, 100),
+            new Animation((t) => t / 38, 100),
+            new Animation((t) => t / 38, 100),
         ],
         autoStart: false,
     });
@@ -618,9 +618,9 @@ it("Stops animation when stopAnimation() is called", () => {
     const leds = new LEDArray([7, 10, 15]);
     leds.animate({
         animation: [
-            new Animation(100, (t) => t / 38),
-            new Animation(100, (t) => t / 50),
-            new Animation(100, (t) => t / 21),
+            new Animation((t) => t / 38, 100),
+            new Animation((t) => t / 50, 100),
+            new Animation((t) => t / 21, 100),
         ],
         autoStart: false,
     });
@@ -650,7 +650,7 @@ it("Stops animation when stopAnimation() is called", () => {
 it("Stops animation when off() is called", () => {
     const leds = new LEDArray([7, 10, 15]);
     leds.animate({
-        animation: new Animation(100, (t) => t / 38),
+        animation: new Animation((t) => t / 38, 100),
         values: [40, 55, 90],
         autoStart: false,
     });
@@ -684,7 +684,7 @@ it("Stops animation when off() is called", () => {
 it("Follows a provided singular animation curve for all values", () => {
     const leds = new LEDArray([7, 10, 15]);
     leds.animate({
-        animation: new Animation(100, (t) => t / 1000),
+        animation: new Animation((t) => t / 1000, 100),
         values: [40, 55, 255],
     });
     expect(pwmSpy).toHaveBeenCalledTimes(0);
@@ -711,9 +711,9 @@ it("Follows the animation curve for each individual LED when passed an animation
     const leds = new LEDArray([7, 10, 15]);
     leds.animate({
         animation: [
-            new Animation(100, (t) => t / 1000),
-            new Animation(100, (t) => t / 2000),
-            new Animation(100, (t) => t / 2500),
+            new Animation((t) => t / 1000, 100),
+            new Animation((t) => t / 2000, 100),
+            new Animation((t) => t / 2500, 100),
         ],
     });
     expect(pwmSpy).toHaveBeenCalledTimes(0);
@@ -739,7 +739,7 @@ it("Follows the animation curve for each individual LED when passed an animation
 it("Restarts a singular animation where it left off when startAnimation() is called", () => {
     const leds = new LEDArray([7, 10]);
     leds.animate({
-        animation: new Animation(100, (t) => t / 1000),
+        animation: new Animation((t) => t / 1000, 100),
         values: [40, 194],
     });
     expect(pwmSpy).toHaveBeenCalledTimes(0);
@@ -794,8 +794,8 @@ it("Restarts an animation array where they all left off when startAnimation() is
     const leds = new LEDArray([7, 10]);
     leds.animate({
         animation: [
-            new Animation(100, (t) => t / 1000),
-            new Animation(100, (t) => t / 2500),
+            new Animation((t) => t / 1000, 100),
+            new Animation((t) => t / 2500, 100),
         ],
     });
     expect(pwmSpy).toHaveBeenCalledTimes(0);

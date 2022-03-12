@@ -7,12 +7,7 @@ class Animation {
     private readonly subscribers: ((newValue: number) => void)[] = [];
 
     /**
-     * Constructor
-     * @param refreshRate How often in ms this animation should be refreshed, i.e.
-     *  how often should the subscribers be called with an update. Must be
-     *  greater than or equal to 1. Anything less than 15 is likely unnecessary,
-     *  and may not even be processed in a timely manner. If the passed value is
-     *  not an integer, it is rounded to the closest integer.
+     * Creates an Animation which refreshes at a rate of 60 times per second.
      * @param curve Function defining the curve of the animation, where time is
      *  the input and the output is a value between 0 and 1 inclusive. If a value
      *  outside that range is returned, it will be clamped within the range. The
@@ -23,8 +18,29 @@ class Animation {
      *  which will be passed to your curve function instead of the calculated
      *  time.
      */
-    public constructor(refreshRate: number, curve: (time: number) => number) {
-        if (refreshRate < 1) {
+    public constructor(curve: (time: number) => number);
+    /**
+     * Creates an Animation.
+     * @param curve Function defining the curve of the animation, where time is
+     *  the input and the output is a value between 0 and 1 inclusive. If a value
+     *  outside that range is returned, it will be clamped within the range. The
+     *  function is called every refreshRate ms, or whenever {@link #calculate()}
+     *  is called. Its argument is the current time minus the time the animation
+     *  was started. If the animation hasn't been started yet, it's passed 0.
+     *  It is possible for users to pass a custom time to {@link #calculate()},
+     *  which will be passed to your curve function instead of the calculated
+     *  time.
+     * @param refreshRate How often in ms this animation should be refreshed, i.e.
+     *  how often should the subscribers be called with an update. Must be
+     *  greater than or equal to 1. Anything less than 15 is likely unnecessary,
+     *  and may not even be processed in a timely manner. If the passed value is
+     *  not an integer, it is rounded to the closest integer.
+     */
+    public constructor(curve: (time: number) => number, refreshRate: number);
+    public constructor(curve: (time: number) => number, refreshRate?: number) {
+        if (refreshRate === undefined) {
+            refreshRate = 60;
+        } else if (refreshRate < 1) {
             throw new Error(
                 "Cannot create an animation with a refresh rate less than 1!"
             );
@@ -141,7 +157,7 @@ class Animation {
     }
 
     public copy(): Animation {
-        return new Animation(this.frequency, this.curve);
+        return new Animation(this.curve, this.frequency);
     }
 
     private callSubscribers(): void {

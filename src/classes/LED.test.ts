@@ -137,9 +137,9 @@ it("Starts animation automatically when no boolean is passed", () => {
     // Timers run off of whole ms only. We must round for accurate results.
     const framerate = Math.floor((1 / 60) * 1000) / 1000;
     led.animate(
-        new Animation(framerate * 1000, (t: number) => {
+        new Animation((t: number) => {
             return ((t / 1000) * 2) % 1;
-        })
+        }, framerate * 1000)
     );
     expect(pwmSpy).toHaveBeenCalledTimes(0);
     setTimeout(() => {
@@ -154,9 +154,9 @@ it("Starts animation automatically when true is passed", () => {
     // Timers run off of whole ms only. We must round for accurate results.
     const framerate = Math.floor((1 / 60) * 1000) / 1000;
     led.animate(
-        new Animation(framerate * 1000, (t: number) => {
+        new Animation((t: number) => {
             return ((t / 1000) * 2) % 1;
-        }),
+        }, framerate * 1000),
         true
     );
     expect(pwmSpy).toHaveBeenCalledTimes(0);
@@ -172,9 +172,9 @@ it("Starts animation when startAnimation() is called", () => {
     // Timers run off of whole ms only. We must round for accurate results.
     const framerate = Math.floor((1 / 60) * 1000) / 1000;
     led.animate(
-        new Animation(framerate * 1000, (t: number) => {
+        new Animation((t: number) => {
             return ((t / 1000) * 2) % 1;
-        }),
+        }, framerate * 1000),
         false
     );
     expect(pwmSpy).toHaveBeenCalledTimes(0);
@@ -194,9 +194,9 @@ it("Stops animation with stopAnimation()", () => {
     // Timers run off of whole ms only. We must round for accurate results.
     const framerate = Math.floor((1 / 60) * 1000) / 1000;
     led.animate(
-        new Animation(framerate * 1000, (t: number) => {
+        new Animation((t: number) => {
             return ((t / 1000) * 2) % 1;
-        })
+        }, framerate * 1000)
     );
     expect(pwmSpy).toHaveBeenCalledTimes(0);
     setTimeout(() => {
@@ -216,9 +216,9 @@ it("Stops animation with off()", () => {
     // Timers run off of whole ms only. We must round for accurate results.
     const framerate = Math.floor((1 / 60) * 1000) / 1000;
     led.animate(
-        new Animation(framerate * 1000, (t: number) => {
+        new Animation((t: number) => {
             return ((t / 1000) * 2) % 1;
-        })
+        }, framerate * 1000)
     );
     expect(pwmSpy).toHaveBeenCalledTimes(0);
     setTimeout(() => {
@@ -238,9 +238,9 @@ it("Follows a provided animation curve", () => {
     // Timers run off of whole ms only. We must round for accurate results.
     const framerate = Math.floor((1 / 60) * 1000) / 1000;
     led.animate(
-        new Animation(framerate * 1000, (t: number) => {
+        new Animation((t: number) => {
             return ((t / 1000) * 2) % 1;
-        })
+        }, framerate * 1000)
     );
     expect(pwmSpy).toHaveBeenCalledTimes(0);
     setTimeout(() => {
@@ -265,9 +265,9 @@ it("Restarts animation where it left off with startAnimation()", () => {
     // Timers run off of whole ms only. We must round for accurate results.
     const framerate = Math.floor((1 / 60) * 1000) / 1000;
     led.animate(
-        new Animation(framerate * 1000, (t: number) => {
+        new Animation((t: number) => {
             return ((t / 1000) * 2) % 1;
-        })
+        }, framerate * 1000)
     );
     expect(pwmSpy).toHaveBeenCalledTimes(0);
     setTimeout(() => {

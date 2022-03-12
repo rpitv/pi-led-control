@@ -3,23 +3,23 @@ import Animation from "./Animation";
 jest.useFakeTimers();
 
 it("Does not allow animations with refresh rates lower than 1.", () => {
-    new Animation(1, () => 1);
+    new Animation(() => 1, 1);
     expect(() => {
-        new Animation(0.99, () => 1);
+        new Animation(() => 1, 0.99);
     }).toThrow(Error);
     expect(() => {
-        new Animation(0, () => 1);
+        new Animation(() => 1, 0);
     }).toThrow(Error);
     expect(() => {
-        new Animation(-1, () => 1);
+        new Animation(() => 1, -1);
     }).toThrow(Error);
     expect(() => {
-        new Animation(-10000, () => 1);
+        new Animation(() => 1, -10000);
     }).toThrow(Error);
 });
 
 it("Calculates the correct value when passed a time.", () => {
-    const anim = new Animation(1, (t) => t / 500);
+    const anim = new Animation((t) => t / 500, 1);
 
     expect(anim.calculate(0)).toBeCloseTo(0, 5);
     expect(anim.calculate(1)).toBeCloseTo(1 / 500, 5);
@@ -30,7 +30,7 @@ it("Calculates the correct value when passed a time.", () => {
 
 it("Calculates the correct value when not passed a time.", () => {
     const start = Date.now();
-    const anim = new Animation(1, (t) => t / 500);
+    const anim = new Animation((t) => t / 500, 1);
     expect(anim.calculate()).toBeCloseTo(0, 5);
     anim.start();
     expect(anim.calculate()).toBeCloseTo(0, 5);
@@ -55,7 +55,7 @@ it("Calculates the correct value when not passed a time.", () => {
 });
 
 it("Clamps output within the range of 0-1 when the curve function returns something outside that range.", () => {
-    const anim = new Animation(1, (t) => t / 500);
+    const anim = new Animation((t) => t / 500, 1);
 
     expect(anim.calculate(-1)).toBeCloseTo(0, 5);
     expect(anim.calculate(-50)).toBeCloseTo(0, 5);
@@ -65,7 +65,7 @@ it("Clamps output within the range of 0-1 when the curve function returns someth
 
 it("Does not call subscribers until the animation is started.", () => {
     const mock = jest.fn();
-    new Animation(100, () => 1).subscribe(mock);
+    new Animation(() => 1, 100).subscribe(mock);
     setTimeout(() => {
         expect(mock).toHaveBeenCalledTimes(0);
     }, 2000);
@@ -74,7 +74,7 @@ it("Does not call subscribers until the animation is started.", () => {
 
 it("Calls the subscribers the appropriate number of times.", () => {
     const mock = jest.fn();
-    const anim = new Animation(100, () => 1).subscribe(mock);
+    const anim = new Animation(() => 1, 100).subscribe(mock);
     anim.start();
     setTimeout(() => {
         expect(mock).toHaveBeenCalledTimes(20);
@@ -85,7 +85,7 @@ it("Calls the subscribers the appropriate number of times.", () => {
 
 it("Stops calling subscribers after having been stopped.", () => {
     const mock = jest.fn();
-    const anim = new Animation(100, () => 1).subscribe(mock);
+    const anim = new Animation(() => 1, 100).subscribe(mock);
     anim.start();
     setTimeout(() => {
         expect(mock).toHaveBeenCalledTimes(5);
@@ -99,7 +99,7 @@ it("Stops calling subscribers after having been stopped.", () => {
 
 it("Does nothing when start() and stop() are called when they don't need to be.", () => {
     const mock = jest.fn();
-    const anim = new Animation(100, () => 1)
+    const anim = new Animation(() => 1, 100)
         .start()
         .subscribe(mock)
         .stop()
@@ -123,7 +123,7 @@ it("Does nothing when start() and stop() are called when they don't need to be."
 
 it("Does not call subscribers which have unsubscribed.", () => {
     const mock = jest.fn();
-    const anim = new Animation(100, () => 1).subscribe(mock);
+    const anim = new Animation(() => 1, 100).subscribe(mock);
     anim.start();
     setTimeout(() => {
         expect(mock).toHaveBeenCalledTimes(20);
@@ -138,7 +138,7 @@ it("Does not call subscribers which have unsubscribed.", () => {
 
 it("Does not allow the same function to subscribe multiple times.", () => {
     const mock = jest.fn();
-    const anim = new Animation(100, () => 1).subscribe(mock).subscribe(mock);
+    const anim = new Animation(() => 1, 100).subscribe(mock).subscribe(mock);
     anim.start();
     setTimeout(() => {
         expect(mock).toHaveBeenCalledTimes(20);
@@ -153,7 +153,7 @@ it("Does not allow the same function to subscribe multiple times.", () => {
 
 it("Does nothing when a function which isn't subscribed unsubscribes.", () => {
     const mock = jest.fn();
-    const anim = new Animation(100, () => 1);
+    const anim = new Animation(() => 1, 100);
     anim.unsubscribe(mock);
     anim.subscribe(mock);
     anim.start();
@@ -174,9 +174,7 @@ it("Does nothing when a function which isn't subscribed unsubscribes.", () => {
 
 it("Calls subscribers with the correct value.", () => {
     let mock = jest.fn();
-    let anim = new Animation(100, () => {
-        return 0.5;
-    }).subscribe(mock);
+    let anim = new Animation(() => 0.5, 100).subscribe(mock);
     anim.start();
     setTimeout(() => {
         expect(mock).toHaveBeenCalledTimes(3);
@@ -186,7 +184,7 @@ it("Calls subscribers with the correct value.", () => {
         anim.stop();
 
         mock = jest.fn();
-        anim = new Animation(100, (time: number) => time / 400).subscribe(mock);
+        anim = new Animation((time: number) => time / 400, 100).subscribe(mock);
         anim.start();
         setTimeout(() => {
             expect(mock).toHaveBeenCalledTimes(3);
@@ -201,7 +199,7 @@ it("Calls subscribers with the correct value.", () => {
 
 it("Clamps overflow values outside of the range of 0-1.", () => {
     let mock = jest.fn();
-    let anim = new Animation(100, () => 1.5).subscribe(mock);
+    let anim = new Animation(() => 1.5, 100).subscribe(mock);
     anim.start();
     setTimeout(() => {
         expect(mock).toHaveBeenCalledTimes(1);
@@ -209,7 +207,7 @@ it("Clamps overflow values outside of the range of 0-1.", () => {
         anim.stop();
 
         mock = jest.fn();
-        anim = new Animation(100, () => -1.5).subscribe(mock);
+        anim = new Animation(() => -1.5, 100).subscribe(mock);
         anim.start();
         setTimeout(() => {
             expect(mock).toHaveBeenCalledTimes(1);
@@ -222,7 +220,7 @@ it("Clamps overflow values outside of the range of 0-1.", () => {
 
 it("Correctly reports whether an animation is running.", () => {
     const mock = jest.fn();
-    const anim = new Animation(100, () => 1.5);
+    const anim = new Animation(() => 1.5, 100);
     expect(anim.isRunning()).toEqual(false);
     anim.subscribe(mock);
     expect(anim.isRunning()).toEqual(false);
@@ -245,7 +243,7 @@ it("Correctly reports whether an animation is running.", () => {
 
 it("Restores progress of animation after being previously stopped.", () => {
     const mock = jest.fn();
-    const anim = new Animation(100, (time: number) => time / 800).subscribe(
+    const anim = new Animation((time: number) => time / 800, 100).subscribe(
         mock
     );
     anim.start();
@@ -270,7 +268,7 @@ it("Restores progress of animation after being previously stopped.", () => {
 
 it("Does not restore progress of animation after being reset.", () => {
     const mock = jest.fn();
-    const anim = new Animation(100, (time: number) => time / 800).subscribe(
+    const anim = new Animation((time: number) => time / 800, 100).subscribe(
         mock
     );
     anim.start();
