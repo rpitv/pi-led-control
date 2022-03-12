@@ -2,7 +2,13 @@ import { Gpio } from "pigpio";
 import Animation from "./Animation";
 
 /**
- * Raspberry Pi GPIO RGB light API.
+ * An LED is a type of connection on a Raspberry Pi GPIO board which has two
+ *  wires: a cathode and an anode. This class does not care about the cathode,
+ *  and only cares which GPIO pin the anode is connected to. Using an LED, you
+ *  can send digital or a pulse modulated signal to the LED (or, whatever you
+ *  have decided to plug in). You may also create Animations which are able to
+ *  dynamically modulate the pulse modulation, allowing you to create things
+ *  like blinking, fading, and custom complex animations.
  */
 class LED {
     /**

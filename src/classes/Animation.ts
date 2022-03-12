@@ -1,9 +1,47 @@
 class Animation {
+    /**
+     * Timestamp in milliseconds since 01-01-1970 at which this Animation's
+     *  {@link #start()} function was called. If the Animation has not yet been
+     *  started, this is equal to null. If the Animation was started and then
+     *  subsequently stopped, this will still be the accurate start time until
+     *  it is started again. However, since this value is used when calculating
+     *  the next animation's frame, we must update this value whenever the
+     *  animation is paused and then resumed.
+     * @private
+     */
     private startTime: number | null = null;
+    /**
+     * Time at which the Animation was last stopped. If this Animation has not
+     *  yet been stopped, then this is null. Otherwise, it is used if the
+     *  Animation is resumed again in order to resume the Animation at the same
+     *  spot.
+     * @private
+     */
     private stopTime: number | null = null;
-    private readonly frequency: number;
+    /**
+     * Frequency at which this Animation should call all of its subscribers.
+     *  This does not alter the frequency of the Curve.
+     * @private
+     */
+    private readonly frameRate: number;
+    /**
+     * Curve function passed in the constructor. This is used to calculate
+     *  how the Animation should appear at any given point in time.
+     * @private
+     */
     private readonly curve: (time: number) => number;
+    /**
+     * NodeJS Interval which is responsible for calling all the subscribers
+     *  at each frame update. If the Animation is not running, then this is
+     *  null.
+     * @private
+     */
     private timer: NodeJS.Timer | null = null;
+    /**
+     * Array of subscriber functions which should be called every time the
+     *  Animation updates.
+     * @private
+     */
     private readonly subscribers: ((newValue: number) => void)[] = [];
 
     /**
@@ -45,7 +83,7 @@ class Animation {
                 "Cannot create an animation with a refresh rate less than 1!"
             );
         }
-        this.frequency = Math.floor(refreshRate);
+        this.frameRate = Math.floor(refreshRate);
         this.curve = curve;
     }
 
@@ -69,7 +107,7 @@ class Animation {
             }
             this.timer = setInterval(() => {
                 this.callSubscribers();
-            }, this.frequency);
+            }, this.frameRate);
         }
         return this;
     }
@@ -137,10 +175,26 @@ class Animation {
         return Math.max(0, Math.min(1, this.curve(time)));
     }
 
+    /**
+     * Whether this Animation is currently running or not.
+     */
     public isRunning(): boolean {
         return this.timer !== null;
     }
 
+    /**
+     * Subscribe a function to be called whenever this Animation updates. If the
+     *  Animation is running, the function you pass in will be called at the
+     *  frequency of whatever framerate you passed into the constructor.
+     * @param listener Listener function which is called to notify you whenever
+     *  this Animation updates frames. It is passed a number which is the
+     *  output value of the Animation, which you can use to display in whatever
+     *  way your application is designed to use it. The value passed is the
+     *  number of milliseconds since this Animation was started. If you pause
+     *  the animation using {@link #stopAnimation()} and then later resume it,
+     *  the animation resumes where it left off. Passing the same instance of
+     *  a function twice will not let you subscribe multiple times.
+     */
     public subscribe(listener: (newValue: number) => void): Animation {
         if (!this.subscribers.includes(listener)) {
             this.subscribers.push(listener);
@@ -148,6 +202,14 @@ class Animation {
         return this;
     }
 
+    /**
+     * Stop a function from listening to this Animation. The function must be
+     *  the exact same instance as the function you passed into
+     *  {@link #subscribe()}, not just a functionally identical one. If you pass
+     *  a function which is already not subscribed, nothing will happen.
+     * @param listener Function to unsubscribe from listening to this Animation.
+     *  If this function is not currently listening, nothing happens.
+     */
     public unsubscribe(listener: (newValue: number) => void): Animation {
         const index = this.subscribers.indexOf(listener);
         if (index >= 0) {
@@ -156,10 +218,18 @@ class Animation {
         return this;
     }
 
+    /**
+     * Create a copy of this Animation, copying the curve function and the frame
+     *  rate. A new instance of the curve function isn't created.
+     */
     public copy(): Animation {
-        return new Animation(this.curve, this.frequency);
+        return new Animation(this.curve, this.frameRate);
     }
 
+    /**
+     * Call all the subscriber functions with the current progress.
+     * @private
+     */
     private callSubscribers(): void {
         const now = Date.now();
         for (const sub of this.subscribers) {

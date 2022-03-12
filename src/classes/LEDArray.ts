@@ -7,6 +7,12 @@ type AnimationOptions = {
     autoStart?: boolean;
 };
 
+/**
+ * An LED array is a set of multiple LED objects which are controlled in bulk.
+ *  Typical use cases for this would probably be:
+ *  - An RGB LED with 3 individual LED components for each color.
+ *  - A set of LEDs which collectively make up a display or shape.
+ */
 class LEDArray {
     /**
      * Array of individual LEDs contained within this LED.
