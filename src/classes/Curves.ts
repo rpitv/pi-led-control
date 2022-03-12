@@ -7,39 +7,48 @@ class Curves {
     /**
      * Create a square waveform Curve function. Returns another function which
      *  you may pass into your Animations.
-     * @param frequency Frequency multiplier for the waveform. A higher number
-     *  means the wave will repeat more frequently.
+     * @param period Period of the waveform in milliseconds. Expected to be not
+     *  equal to 0.
      * @constructor
      */
-    public static Square(frequency: number): (time: number) => number {
+    public static Square(period: number): (time: number) => number {
+        if (period === 0) {
+            throw new Error("Period must be not equal to 0.");
+        }
         return (time: number): number => {
-            return Math.ceil(Math.sin(time * frequency));
+            return Math.ceil(Math.sin((time / period) * Math.PI));
         };
     }
 
     /**
      * Create a sawtooth waveform Curve function. Returns another function which
      *  you may pass into your Animations.
-     * @param frequency Frequency multiplier for the waveform. A higher number
-     *  means the wave will repeat more frequently.
+     * @param period Period of the waveform in milliseconds. Expected to be not
+     *  equal to 0.
      * @constructor
      */
-    public static Sawtooth(frequency: number): (time: number) => number {
+    public static Sawtooth(period: number): (time: number) => number {
+        if (period === 0) {
+            throw new Error("Period must be not equal to 0.");
+        }
         return (time: number): number => {
-            return (time * frequency) % 1;
+            return Math.abs((time / period) % 1);
         };
     }
 
     /**
      * Create a sine waveform Curve function. Returns another function which
      *  you may pass into your Animations.
-     * @param frequency Frequency multiplier for the waveform. A higher number
-     *  means the wave will repeat more frequently.
+     * @param period Period of the waveform in milliseconds. Expected to be not
+     *  equal to 0.
      * @constructor
      */
-    public static Sine(frequency: number): (time: number) => number {
+    public static Sine(period: number): (time: number) => number {
+        if (period === 0) {
+            throw new Error("Period must be not equal to 0.");
+        }
         return (time: number): number => {
-            return (Math.sin(time * frequency) + 1) / 2;
+            return (Math.sin((time / period) * 2 * Math.PI) + 1) / 2;
         };
     }
 }

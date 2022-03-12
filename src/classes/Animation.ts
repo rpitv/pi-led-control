@@ -77,7 +77,7 @@ class Animation {
     public constructor(curve: (time: number) => number, refreshRate: number);
     public constructor(curve: (time: number) => number, refreshRate?: number) {
         if (refreshRate === undefined) {
-            refreshRate = 60;
+            refreshRate = 16; // ~60 fps (1000 / 60)
         } else if (refreshRate < 1) {
             throw new Error(
                 "Cannot create an animation with a refresh rate less than 1!"

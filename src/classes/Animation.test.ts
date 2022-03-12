@@ -315,3 +315,19 @@ it("Does not restore progress of animation after being reset.", () => {
     }, 300);
     jest.runAllTimers();
 });
+
+it("Defaults to refresh rate of 60fps when one isn't explicitly set", () => {
+    const mock = jest.fn();
+    const anim = new Animation((time: number) => time / 800)
+        .subscribe(mock)
+        .start();
+    expect(mock).toHaveBeenCalledTimes(0);
+    setTimeout(() => {
+        expect(mock).toHaveBeenCalledTimes(1);
+        setTimeout(() => {
+            expect(mock).toHaveBeenCalledTimes(2);
+            anim.stop();
+        }, Math.floor((1 / 60) * 1000));
+    }, Math.floor((1 / 60) * 1000));
+    jest.runAllTimers();
+});

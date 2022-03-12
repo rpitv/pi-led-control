@@ -2,7 +2,7 @@ import LED from "./LED";
 import Animation from "./Animation";
 
 type AnimationOptions = {
-    animation: Animation[] | Animation;
+    animation: (Animation | null)[] | Animation;
     values?: number[];
     autoStart?: boolean;
 };
@@ -78,13 +78,16 @@ class LEDArray {
      * Start an animation across this LED array's LEDs.
      * @param animation Array of animations, which each animation corresponding
      *  to the LED at the same index, passed in the constructor. Expected to be
-     *  the same length as the number of LEDs in this LEDArray. The animation
-     *  will immediately start. If you do not want the animation to
-     *  automatically start, pass false to the autoStart parameter.
+     *  the same length as the number of LEDs in this LEDArray. You may pass
+     *  null in place of a function for indices which you don't want to be
+     *  animated. These indices will respond to normal write() calls and won't
+     *  be overwritten by the animation.The animation will immediately start.
+     *  If you do not want the animation to automatically start, pass false to
+     *  the autoStart parameter.
      * @throws Error if the length of the animation array is not equal to the
      *  number of LEDs.
      */
-    animate(animation: Animation[]): void;
+    animate(animation: (Animation | null)[]): void;
     /**
      * Start an animation across this LED array's LEDs.
      * @param animation Animation to be used for all the LEDs in this LED
@@ -107,10 +110,13 @@ class LEDArray {
      * Start an animation across this LED array's LEDs.
      * @param options Options argument which allows more verbose control over
      *  how the animation will operate. Properties:
-     *  - animation: Animation or Animation[]. If you pass a single Animation,
-     *      then you must also pass the values of the animation via the values
-     *      property. Otherwise, the animation array must have equal length
-     *      to the number of LEDs.
+     *  - animation: Animation or (Animation|null)[]. If you pass a single
+     *      Animation, then you must also pass the values of the animation via
+     *      the values property. Otherwise, the animation array must have equal
+     *      length to the number of LEDs. You may pass null in place of a
+     *      function for indices which you don't want to be animated. These
+     *      indices will respond to normal write() calls and won't be
+     *      overwritten by the animation.
      *  - autoStart?: boolean. If true or undefined, the animation immediately
      *      starts within this function call. Otherwise, you must call
      *      {@link #startAnimation()} to start the animation.
@@ -135,7 +141,7 @@ class LEDArray {
      */
     animate(options: AnimationOptions): void;
     animate(
-        arg1: Animation[] | AnimationOptions | Animation,
+        arg1: (Animation | null)[] | AnimationOptions | Animation,
         arg2?: number[]
     ): void {
         this.stopAnimation();
@@ -204,7 +210,12 @@ class LEDArray {
             // An animation array can just have the individual animations
             //  passed onto the individual LEDs.
             for (let i = 0; i < options.animation.length; i++) {
-                this.leds[i].animate(options.animation[i], options.autoStart);
+                if (options.animation[i] !== null) {
+                    this.leds[i].animate(
+                        options.animation[i] as Animation,
+                        options.autoStart
+                    );
+                }
             }
             this.animation = {
                 animation: options.animation,
@@ -230,7 +241,9 @@ class LEDArray {
         } else {
             // Animation[] -- Each animation is passed directly to LEDs
             for (let i = 0; i < this.leds.length; i++) {
-                this.leds[i].startAnimation();
+                if (this.animation.animation[i] !== null) {
+                    this.leds[i].startAnimation();
+                }
             }
         }
     }
@@ -251,7 +264,9 @@ class LEDArray {
             } else {
                 // Animation[] -- Each animation is passed directly to LEDs
                 for (let i = 0; i < this.leds.length; i++) {
-                    this.leds[i].stopAnimation();
+                    if (this.animation.animation[i] !== null) {
+                        this.leds[i].stopAnimation();
+                    }
                 }
             }
         }
