@@ -26,7 +26,24 @@ Hardware instructions coming sometime in the future.
 
 ## Usage
 
-TODO Coming soon
+### Basic Example
+
+```js
+const { LED } = require("pi-led-control");
+// Other imports: LEDArray, Animation, Curves
+
+const led = new LED(3);
+led.write(true);
+led.off();
+```
+
+### More Examples
+
+More examples of how to use all of the available imports are available in the [`/examples`](./examples) folder.
+
+### Specifications
+
+TODO. For now, please refer to the examples and JSDocs within the code.
 
 ## Development
 
