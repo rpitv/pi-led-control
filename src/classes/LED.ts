@@ -39,14 +39,15 @@ class LED {
      * Constructor
      * @param pin {number} GPIO pin corresponding to the LED
      * @param invert {boolean} Whether the signals to these lights should be
-     *  inverted before writing. E.g., true = off and false = on.
+     *  inverted before writing. E.g., true = off and false = on. Defaults to
+     *  false if not passed.
      */
-    constructor(pin: number, invert: boolean) {
+    constructor(pin: number, invert?: boolean) {
         if (pin < 0) {
             throw new Error("GPIO pins must be greater than or equal to 0.");
         }
         this.pin = new Gpio(pin, { mode: Gpio.OUTPUT });
-        this.invert = invert;
+        this.invert = !!invert;
         this.animation = null;
     }
 
