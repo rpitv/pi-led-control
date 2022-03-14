@@ -13,7 +13,11 @@ const pwmSpy = jest.spyOn(Gpio.prototype, "pwmWrite");
  * @param value
  * @param invert
  */
-function testBasicWrite(pin: number, value: number | boolean, invert: boolean) {
+function testBasicWrite(
+    pin: number,
+    value: number | boolean,
+    invert?: boolean
+) {
     const led = new LED(pin, invert);
     if (typeof value === "number") {
         led.write(value);
@@ -107,6 +111,14 @@ it("Properly inverts writes.", () => {
     testBasicWrite(1, 0, true);
     testBasicWrite(1, false, true);
     testBasicWrite(1, true, true);
+});
+
+it("Does not invert if invert is not passed.", () => {
+    testBasicWrite(1, 50);
+    testBasicWrite(1, 255);
+    testBasicWrite(1, 0);
+    testBasicWrite(1, false);
+    testBasicWrite(1, true);
 });
 
 it("Turns off all pins with off().", () => {

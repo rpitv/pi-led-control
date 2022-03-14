@@ -9,25 +9,49 @@
 
 ## Features
 
-- Control different types of LEDs from your application.
+- Control different types of LED and LED arrays from your application.
   - Single channel
-  - RGB/tri-channel
-  - Arbitrary channel count
-- Diode mode, allowing you to remove a dedicated ground.
+  - Multi channel (e.g. RGB)
+  - LED segment displays
 - Flash LEDs at any frequency.
 - Animate your LEDs using your own custom functions.
 
 ## Necessary supplies
 
 - Raspberry Pi (any should do, as long as it has GPIO).
-- LED(s) w/ necessary resistors.
-- Diodes for the ground connection, if using diode mode.
+- LED(s).
+- Any necessary resistors/transistors.
 
 Hardware instructions coming sometime in the future.
 
 ## Usage
 
-TODO Coming soon
+### Basic Example
+
+```js
+const { LED } = require("pi-led-control");
+// Other imports: LEDArray, Animation, Curves
+
+const led = new LED(3);
+led.write(true);
+led.off();
+```
+
+### More Examples
+
+More examples of how to use all the available imports are available in the [`/examples`](./examples) folder.
+
+- [Basic writing](./examples/basic-write.ts)
+- [Basic animation](./examples/basic-animate.ts)
+- [Custom animation](./examples/custom-animate.ts)
+- [Basic LEDArray writing](./examples/basic-write-array.ts)
+- [Basic LEDArray animation](./examples/basic-animate-array.ts)
+- [Custom LEDArray animation](./examples/custom-animate-array.ts)
+- [Signal inverting](./examples/invert.ts)
+
+### Specifications
+
+TODO. For now, please refer to the examples and JSDocs within the code.
 
 ## Development
 
@@ -49,6 +73,16 @@ npm run prepare
 ```
 
 You are now ready to write code. All application code is located within [/src](./src). Begin writing in your `.ts` files. It is presumed you will not be developing on a Raspberry Pi. If you do, then you may run the application using `npm start`. Otherwise, use `npm test` to run unit tests on your code.
+
+### Building
+
+The library can be built with the following command:
+
+```shell
+npm run build
+```
+
+Building and deployment is handled by CI, if you wish to use the main NPM package.
 
 ### Testing
 
