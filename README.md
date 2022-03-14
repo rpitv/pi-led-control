@@ -7,6 +7,8 @@
 
 > Control different types of LEDs from your Raspberry Pi.
 
+https://www.npmjs.com/package/pi-led-control
+
 ## Features
 
 - Control different types of LED and LED arrays from your application.
@@ -27,6 +29,10 @@ Hardware instructions coming sometime in the future.
 ## Usage
 
 ### Basic Example
+
+```shell
+npm i pi-led-control
+```
 
 ```js
 const { LED } = require("pi-led-control");
