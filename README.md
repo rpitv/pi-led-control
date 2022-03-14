@@ -39,7 +39,15 @@ led.off();
 
 ### More Examples
 
-More examples of how to use all of the available imports are available in the [`/examples`](./examples) folder.
+More examples of how to use all the available imports are available in the [`/examples`](./examples) folder.
+
+- [Basic writing](./examples/basic-write.ts)
+- [Basic animation](./examples/basic-animate.ts)
+- [Custom animation](./examples/custom-animate.ts)
+- [Basic LEDArray writing](./examples/basic-write-array.ts)
+- [Basic LEDArray animation](./examples/basic-animate-array.ts)
+- [Custom LEDArray animation](./examples/custom-animate-array.ts)
+- [Signal inverting](./examples/invert.ts)
 
 ### Specifications
 
